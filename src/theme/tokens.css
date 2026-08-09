@@ -1,0 +1,59 @@
+/*
+ * SoilMon design tokens (SPEC §17, §32.13, §32.16, §32.17).
+ * Values are space-separated RGB channels so Tailwind's <alpha-value> works.
+ * Only token VALUES change between themes. Layout/hierarchy never change here.
+ * Numbers are Stage 1 foundation defaults and may be tuned against the
+ * approved reference in later stages.
+ */
+
+:root,
+:root[data-theme="light"] {
+  /* Surfaces & text — spec §1.1 exact values */
+  --color-bg: 248 250 252;          /* #F8FAFC */
+  --color-surface: 255 255 255;     /* #FFFFFF */
+  --color-border: 226 232 240;      /* Slate-200 */
+  --color-text: 30 41 59;           /* #1E293B Slate-800 */
+  --color-text-muted: 100 116 139;  /* #64748B Slate-500 */
+
+  /* SoilMon identity — spec §1.1 */
+  --color-accent: 15 107 50;        /* #0F6B32 */
+  --color-sidebar: 15 107 50;       /* #0F6B32 */
+  --color-sidebar-active: 27 133 67; /* #1B8543 */
+  --color-sidebar-text: 255 255 255;
+
+  /* Status semantics (constant across themes) */
+  --color-status-ok: 34 197 94;     /* #22C55E */
+  --color-status-warn: 249 115 22;  /* #F97316 orange */
+  --color-status-error: 239 68 68;  /* #EF4444 red */
+  --color-status-info: 59 130 246;  /* #3B82F6 blue */
+
+  /* Purple for uptime/clock KPI */
+  --color-purple: 139 92 246;
+
+  /* Spacing / shape scale */
+  --space-page-x: 32px;
+  --space-section-y: 24px;
+  --content-max-width: 1600px;
+  --sidebar-width: 240px;
+  --header-height: 80px;
+}
+
+:root[data-theme="dark"] {
+  --color-bg: 14 20 26;
+  --color-surface: 22 30 38;
+  --color-border: 40 52 60;
+  --color-text: 228 238 242;
+  --color-text-muted: 140 158 162;
+
+  --color-accent: 15 107 50;
+  --color-sidebar: 15 107 50;
+  --color-sidebar-active: 27 133 67;
+  --color-sidebar-text: 255 255 255;
+
+  --color-status-ok: 34 197 94;
+  --color-status-warn: 249 115 22;
+  --color-status-error: 239 68 68;
+  --color-status-info: 59 130 246;
+
+  --color-purple: 167 139 250;
+}
