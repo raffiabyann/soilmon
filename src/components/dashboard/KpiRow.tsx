@@ -32,7 +32,7 @@ export function KpiRow({ cards }: { cards: KpiCard[] }) {
   return (
     <section
       aria-label="System summary"
-      className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4"
+      className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4 xl:gap-6"
     >
       {resolvedCards.map((card) => (
         <MetricCard key={card.id} card={card} />

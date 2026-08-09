@@ -5,25 +5,26 @@ import dekatifLogo from "@/assets/dekatif.png";
 /**
  * Institutional logo group (SPEC §13, §32.4).
  *
- * EXACTLY four slots in fixed order: Hilirisasi, UMN, FTI (pending), DEKATIF.
- * Normalised to a consistent rendered height. Gaps are intentional and balanced.
+ * Mobile: h-5 (20px) with gap-1 — fits 375px without overflow.
+ * sm:     h-7 (28px).
+ * lg:     h-9 (36px) — desktop reference design unchanged.
  */
 export function HeaderLogos() {
   return (
-    <div className="flex items-center gap-3" aria-label="Institutional logos">
+    <div className="flex items-center gap-1 sm:gap-2 lg:gap-3" aria-label="Institutional logos">
       <img
         src={hilirasiLogo}
         alt="Hilirisasi"
-        className="h-9 w-auto object-contain"
+        className="h-5 w-auto object-contain sm:h-7 lg:h-9"
       />
       <img
         src={umnLogo}
         alt="Universitas Multimedia Nusantara"
-        className="h-9 w-auto object-contain"
+        className="h-5 w-auto object-contain sm:h-7 lg:h-9"
       />
-      {/* FTI slot — asset pending. Same height/alignment as other logos (SPEC §32.4). */}
+      {/* FTI slot — asset pending */}
       <div
-        className="flex h-9 w-14 items-center justify-center text-[11px] font-semibold text-muted"
+        className="flex h-5 w-7 items-center justify-center text-[9px] font-semibold text-muted sm:h-7 sm:w-10 sm:text-[10px] lg:h-9 lg:w-14 lg:text-[11px]"
         role="img"
         aria-label="FTI logo (pending)"
         title="FTI logo slot reserved"
@@ -33,7 +34,7 @@ export function HeaderLogos() {
       <img
         src={dekatifLogo}
         alt="DEKATIF"
-        className="h-9 w-auto object-contain"
+        className="h-5 w-auto object-contain sm:h-7 lg:h-9"
       />
     </div>
   );

@@ -1,22 +1,18 @@
-import type { ReactNode } from "react";
+import { useState, useCallback, type ReactNode } from "react";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Header } from "@/components/layout/Header";
 import { PageBackground } from "@/components/layout/PageBackground";
+import { MobileNav } from "@/components/layout/MobileNav";
 
 /**
- * Application shell (SPEC §32.1, §32.2, §32.3, §32.18).
+ * Application shell.
  *
- * Two regions: a full-height fixed forest-green sidebar and a fluid
- * main column with the header and dashboard content.
+ * Desktop (≥1024px): fixed 240px sidebar + fluid main column.
+ * Mobile (<1024px):  no sidebar — replaced by hamburger/drawer via MobileNav.
  *
- * Sidebar width and main-column offset both derive from --sidebar-width
- * in tokens.css (240px) — single source of truth.
- *
- * FooterLeaf: faint botanical leaf watermark at lower-right of page per
- * design_specs §G ("ornamen daun air samar di area latar belakang kanan layar").
+ * overflow-x-hidden on the root prevents any mobile horizontal overflow.
  */
 
-/** Faint leaf watermark — lower-right of page, behind all content (SPEC §32.12, design_specs §G). */
 function FooterLeafWatermark() {
   return (
     <div
@@ -35,11 +31,8 @@ function FooterLeafWatermark() {
         strokeLinejoin="round"
         className="text-accent"
       >
-        {/* Primary leaf outline */}
         <path d="M124 10 C56 55 50 165 124 306 C198 165 192 55 124 10 Z" strokeWidth="2" />
-        {/* Central vein */}
         <path d="M124 22 L124 295" strokeWidth="1.5" />
-        {/* Lateral veins */}
         <path d="M124 62 C98 72 78 90 64 112" strokeWidth="1.2" />
         <path d="M124 62 C150 72 170 90 184 112" strokeWidth="1.2" />
         <path d="M124 112 C100 122 82 140 70 162" strokeWidth="1.1" />
@@ -54,24 +47,28 @@ function FooterLeafWatermark() {
 }
 
 export function Layout({ children }: { children?: ReactNode }) {
-  return (
-    <div className="relative min-h-full bg-bg text-text">
-      {/* Subtle topographic background decoration (SPEC §32.12) */}
-      <PageBackground />
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const openDrawer = useCallback(() => setDrawerOpen(true), []);
+  const closeDrawer = useCallback(() => setDrawerOpen(false), []);
 
-      {/* Footer-area right-side leaf watermark (design_specs §G) */}
+  return (
+    <div className="relative min-h-full overflow-x-hidden bg-bg text-text">
+      <PageBackground />
       <FooterLeafWatermark />
 
-      {/* Fixed full-height sidebar (desktop) — width from --sidebar-width token */}
+      {/* Mobile drawer — only rendered below lg breakpoint */}
+      <MobileNav open={drawerOpen} onClose={closeDrawer} />
+
+      {/* Fixed full-height sidebar (desktop only) */}
       <div className="fixed inset-y-0 left-0 z-20 hidden w-[var(--sidebar-width)] lg:block">
         <Sidebar />
       </div>
 
-      {/* Main column, offset by sidebar width on desktop */}
+      {/* Main column */}
       <div className="relative z-10 lg:pl-[var(--sidebar-width)]">
-        <div className="mx-auto w-full max-w-[1600px] px-5 lg:px-8">
-          <Header />
-          <main className="py-6">{children}</main>
+        <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-5 lg:px-8">
+          <Header onMenuOpen={openDrawer} />
+          <main className="py-4 sm:py-6">{children}</main>
         </div>
       </div>
     </div>

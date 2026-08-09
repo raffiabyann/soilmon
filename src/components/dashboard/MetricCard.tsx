@@ -95,7 +95,7 @@ export function MetricCard({ card }: { card: KpiCard }) {
   const showSparkline = card.icon === "chart";
 
   return (
-    <Card className="flex min-h-[120px] items-center gap-4 px-5 py-5 motion-safe:hover:-translate-y-px motion-safe:hover:shadow-[0_6px_16px_rgba(0,0,0,0.10)] motion-safe:transition-[transform,box-shadow] motion-safe:duration-150 motion-safe:ease-out">
+    <Card className="flex min-h-[90px] items-center gap-3 px-3 py-3 motion-safe:hover:-translate-y-px motion-safe:hover:shadow-[0_6px_16px_rgba(0,0,0,0.10)] motion-safe:transition-[transform,box-shadow] motion-safe:duration-150 motion-safe:ease-out sm:gap-4 sm:px-4 sm:py-4 xl:min-h-[120px] xl:px-5 xl:py-5">
       {/* Left: icon in tinted square */}
       <span
         className={cn(
