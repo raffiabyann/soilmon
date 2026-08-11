@@ -1,5 +1,5 @@
-import hilirasiLogo from "@/assets/hilirasi.jpg";
-import umnLogo from "@/assets/umn.jpg";
+import hilirasiLogo from "@/assets/hilirasi.png";
+import umnLogo from "@/assets/umn.png";
 import dekatifLogo from "@/assets/dekatif.png";
 
 /**
