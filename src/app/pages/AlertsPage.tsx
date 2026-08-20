@@ -4,8 +4,8 @@ import { StatusBadge } from "@/components/ui/StatusBadge";
 import { icons } from "@/lib/icons";
 import { cn } from "@/lib/cn";
 import { useDashboardData } from "@/hooks/useDashboardData";
+import { ALERT_CATEGORY_ICON, ALERT_SEV_STYLE, ALERT_CATEGORY_STYLE } from "@/lib/alertStyles";
 import type {
-  AlertCategory,
   AlertEntry,
   AlertSeverity,
   IrrigationZone,
@@ -27,33 +27,8 @@ import type {
  * are not yet confirmed. Both sections show mock/placeholder data.
  */
 
-// ─── Shared icon/style maps (mirrors RecentAlerts) ───────────────────────────
-
-const CATEGORY_ICON: Record<AlertCategory, keyof typeof icons> = {
-  moisture:    "moisture",
-  ph:          "ph",
-  temperature: "temperature",
-  battery:     "battery",
-  power:       "solar",
-  signal:      "signal",
-  system:      "info",
-  generic:     "alert",
-};
-
-const SEV_STYLE: Record<AlertSeverity, { iconBg: string; iconText: string }> = {
-  error:   { iconBg: "bg-status-error/10", iconText: "text-status-error" },
-  warning: { iconBg: "bg-status-warn/10",  iconText: "text-status-warn"  },
-  info:    { iconBg: "bg-status-info/10",  iconText: "text-status-info"  },
-};
-
-const CATEGORY_STYLE: Partial<Record<AlertCategory, { iconBg: string; iconText: string }>> = {
-  moisture: { iconBg: "bg-status-info/10", iconText: "text-status-info" },
-  battery:  { iconBg: "bg-status-warn/10", iconText: "text-status-warn" },
-  signal:   { iconBg: "bg-status-info/10", iconText: "text-status-info" },
-};
-
 function resolveAlertStyle(alert: AlertEntry) {
-  return CATEGORY_STYLE[alert.category] ?? SEV_STYLE[alert.severity];
+  return ALERT_CATEGORY_STYLE[alert.category] ?? ALERT_SEV_STYLE[alert.severity];
 }
 
 // ─── Filter tabs ──────────────────────────────────────────────────────────────
@@ -84,7 +59,7 @@ function countBySeverity(alerts: AlertEntry[], severity: AlertSeverity): number 
 // ─── Alert row ────────────────────────────────────────────────────────────────
 
 function AlertRow({ alert, last }: { alert: AlertEntry; last: boolean }) {
-  const iconKey = CATEGORY_ICON[alert.category];
+  const iconKey = ALERT_CATEGORY_ICON[alert.category];
   const Icon = icons[iconKey];
   const style = resolveAlertStyle(alert);
 

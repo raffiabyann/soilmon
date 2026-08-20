@@ -47,17 +47,6 @@ function SparklineTrend() {
  *   Others            → slate-800 (text)
  */
 
-const ICON_MAP = {
-  gateway:  icons.gateway,
-  history:  icons.history,
-  chart:    icons.chart,
-  signal:   icons.signal,
-  database: icons.database,
-  activity: icons.activity,
-  trendUp:  icons.trendUp,
-  clock4:   icons.clock4,
-} as const;
-
 const TREND_ICON = {
   up:   icons.trendArrowUp,
   down: icons.trendDown,
@@ -84,7 +73,7 @@ function valueColor(card: KpiCard): string {
 }
 
 export function MetricCard({ card }: { card: KpiCard }) {
-  const Icon = ICON_MAP[card.icon as keyof typeof ICON_MAP] ?? icons.activity;
+  const Icon = icons[card.icon as keyof typeof icons] ?? icons.activity;
   const style = ICON_STYLE[card.icon] ?? { bg: "bg-accent/10", text: "text-accent" };
   const TrendIcon = card.trend ? TREND_ICON[card.trend] : null;
 

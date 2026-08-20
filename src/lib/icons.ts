@@ -8,9 +8,6 @@ import {
   Droplet,
   FlaskConical,
   Battery,
-  BatteryLow,
-  BatteryFull,
-  BatteryMedium,
   SignalHigh,
   TriangleAlert,
   TrendingUp,
@@ -35,7 +32,6 @@ import {
   Bell,
   ShieldCheck,
   BarChart2,
-  Zap,
   type LucideIcon,
 } from "lucide-react";
 
@@ -80,10 +76,6 @@ export const icons = {
   autoRefresh:  RefreshCw,
   // Power monitoring (solar panel / battery system)
   solar:        Sun,          // solar panel / power source
-  zap:          Zap,          // instantaneous power / charging indicator
-  batteryLow:   BatteryLow,   // battery low state
-  batteryFull:  BatteryFull,  // battery full state
-  batteryMid:   BatteryMedium, // battery mid state
 } satisfies Record<string, LucideIcon>;
 
 export type { LucideIcon };

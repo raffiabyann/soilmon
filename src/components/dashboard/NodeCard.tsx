@@ -2,6 +2,7 @@ import { Card } from "@/components/ui/Card";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { icons } from "@/lib/icons";
 import { cn } from "@/lib/cn";
+import { METRIC_ICON, METRIC_LABEL_SHORT } from "@/lib/metricConfig";
 import type { NodeData, NodeMetric, NodeMetricKey, StatusLevel } from "@/types/dashboard";
 
 /**
@@ -15,14 +16,6 @@ import type { NodeData, NodeMetric, NodeMetricKey, StatusLevel } from "@/types/d
  *
  * All values are mock placeholders (SPEC §32.19).
  */
-
-const METRIC_ICON: Partial<Record<NodeMetricKey, keyof typeof icons>> = {
-  temperature: "temperature",
-  moisture:    "moisture",
-  ph:          "ph",
-  battery:     "battery",
-  rssi:        "signal",
-};
 
 const NODE_STATUS_LEVEL: Record<NodeData["status"], StatusLevel> = {
   online:  "ok",
@@ -43,18 +36,10 @@ const METRIC_VALUE_COLOR: Record<string, string> = {
   info:    "text-status-info",
 };
 
-const METRIC_LABEL: Record<NodeMetricKey, string> = {
-  temperature: "Temp",
-  moisture:    "Moisture",
-  ph:          "pH",
-  battery:     "Battery",
-  rssi:        "Signal",
-};
-
 /** Primary metric — large value with label below */
 function PrimaryMetric({ metric }: { metric: NodeMetric }) {
   const valueColor = metric.status ? (METRIC_VALUE_COLOR[metric.status] ?? "text-text") : "text-text";
-  const label = METRIC_LABEL[metric.key];
+  const label = METRIC_LABEL_SHORT[metric.key];
 
   return (
     <div className="flex flex-1 flex-col items-center gap-0.5">

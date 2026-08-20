@@ -5,6 +5,10 @@ dist-ssr
 *.tsbuildinfo
 .vite
 
+# Environment variables
+.env
+.env.*
+
 # Editor / OS
 .DS_Store
 Thumbs.db

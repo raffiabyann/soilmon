@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import { useDashboardData } from "@/hooks/useDashboardData";
-import { buildAnalyticsReport } from "@/lib/analytics";
-import type { AnalyticsReport } from "@/lib/analytics";
+import { buildAnalyticsReport, type AnalyticsReport } from "@/lib/analytics";
 
 /**
  * Provides a computed AnalyticsReport derived from the current dashboard data.

@@ -4,7 +4,8 @@ import { StatusBadge } from "@/components/ui/StatusBadge";
 import { icons } from "@/lib/icons";
 import { cn } from "@/lib/cn";
 import { useDashboardData } from "@/hooks/useDashboardData";
-import type { TelemetryMetricKey, TelemetryRecord, StatusLevel } from "@/types/dashboard";
+import { METRIC_LABEL, METRIC_ICON, STATUS_LABEL } from "@/lib/metricConfig";
+import type { TelemetryMetricKey, TelemetryRecord } from "@/types/dashboard";
 
 /**
  * Data History page — tabular view of historical telemetry records.
@@ -23,34 +24,7 @@ import type { TelemetryMetricKey, TelemetryRecord, StatusLevel } from "@/types/d
  * All values are simulated — see dashboard.mock.ts buildTelemetryHistory().
  */
 
-// ─── Status label map ─────────────────────────────────────────────────────────
-
-const STATUS_LABEL: Record<StatusLevel, string> = {
-  ok:      "OK",
-  warning: "Warning",
-  error:   "Error",
-  info:    "Info",
-};
-
 const PAGE_SIZE = 20;
-
-// ─── Metric display config ────────────────────────────────────────────────────
-
-const METRIC_LABEL: Record<TelemetryMetricKey, string> = {
-  temperature: "Temperature",
-  moisture:    "Moisture",
-  ph:          "pH",
-  battery:     "Battery",
-  rssi:        "Signal",
-};
-
-const METRIC_ICON: Record<TelemetryMetricKey, keyof typeof icons> = {
-  temperature: "temperature",
-  moisture:    "moisture",
-  ph:          "ph",
-  battery:     "battery",
-  rssi:        "signal",
-};
 
 // ─── Filter helpers ───────────────────────────────────────────────────────────
 

@@ -1,9 +1,10 @@
 import { useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { icons, type LucideIcon } from "@/lib/icons";
+import { icons } from "@/lib/icons";
 import { cn } from "@/lib/cn";
 import { SidebarLeafDecoration } from "@/components/layout/SidebarLeafDecoration";
 import { SidebarStatus } from "@/components/layout/SidebarStatus";
+import { NAV_ITEMS } from "@/config/navigation";
 
 /**
  * Mobile navigation drawer (lg:hidden).
@@ -13,20 +14,6 @@ import { SidebarStatus } from "@/components/layout/SidebarStatus";
  * Dismissible via overlay tap or close button.
  * Keyboard accessible — traps focus within the open drawer.
  */
-
-interface NavItem {
-  label: string;
-  icon: LucideIcon;
-  to: string;
-}
-
-const NAV_ITEMS: NavItem[] = [
-  { label: "Dashboard",    icon: icons.dashboard, to: "/"             },
-  { label: "Data History", icon: icons.lineChart,  to: "/data-history" },
-  { label: "Alerts",       icon: icons.bell,       to: "/alerts"       },
-  { label: "Reports",      icon: icons.reports,    to: "/reports"      },
-  { label: "Settings",     icon: icons.settings,   to: "/settings"     },
-];
 
 interface MobileNavProps {
   open: boolean;

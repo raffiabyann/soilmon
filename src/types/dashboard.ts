@@ -6,9 +6,9 @@
  * during frontend development (SPEC §5, §24) and the exact schema must follow
  * the real hardware specification once confirmed.
  *
- * Stage 3 implements only `summary` (KPI cards) and `environmentalSeries`
- * (Environmental Overview). Other sections are declared for structural
- * continuity but are NOT implemented in this stage.
+ * Prototype stage: all sections are declared and implemented with simulated data.
+ * When hardware and gateway contract are confirmed, only the adapter layer needs
+ * to change — presentational components are data-source agnostic.
  */
 
 /** Semantic status used across the UI (SPEC §17). */

@@ -3,8 +3,9 @@ import { StatusBadge } from "@/components/ui/StatusBadge";
 import { icons } from "@/lib/icons";
 import { cn } from "@/lib/cn";
 import { useAnalytics } from "@/hooks/useAnalytics";
+import { METRIC_LABEL, METRIC_ICON, STATUS_LABEL } from "@/lib/metricConfig";
 import type { MetricStats, NodeSummary, CrossNodeRanking } from "@/lib/analytics";
-import type { NodeMetricKey, StatusLevel, TrendDirection } from "@/types/dashboard";
+import type { TrendDirection } from "@/types/dashboard";
 
 /**
  * Reports & Analytics page.
@@ -24,33 +25,6 @@ import type { NodeMetricKey, StatusLevel, TrendDirection } from "@/types/dashboa
  * - No chatbot UI
  * - No date range picker or export
  */
-
-// ─── Metric display config ────────────────────────────────────────────────────
-
-const METRIC_LABEL: Record<NodeMetricKey, string> = {
-  temperature: "Temperature",
-  moisture:    "Moisture",
-  ph:          "pH",
-  battery:     "Battery",
-  rssi:        "Signal",
-};
-
-const METRIC_ICON: Record<NodeMetricKey, keyof typeof icons> = {
-  temperature: "temperature",
-  moisture:    "moisture",
-  ph:          "ph",
-  battery:     "battery",
-  rssi:        "signal",
-};
-
-// ─── Status label ─────────────────────────────────────────────────────────────
-
-const STATUS_LABEL: Record<StatusLevel, string> = {
-  ok:      "OK",
-  warning: "Warning",
-  error:   "Error",
-  info:    "Info",
-};
 
 // ─── Trend icon and label ─────────────────────────────────────────────────────
 

@@ -1,8 +1,9 @@
 import { NavLink } from "react-router-dom";
-import { icons, type LucideIcon } from "@/lib/icons";
 import { cn } from "@/lib/cn";
 import { SidebarStatus } from "@/components/layout/SidebarStatus";
 import { SidebarLeafDecoration } from "@/components/layout/SidebarLeafDecoration";
+import { icons } from "@/lib/icons";
+import { NAV_ITEMS } from "@/config/navigation";
 
 /**
  * Sidebar (SPEC §32.2, design_specs §A).
@@ -17,19 +18,6 @@ import { SidebarLeafDecoration } from "@/components/layout/SidebarLeafDecoration
  *   Reports      → FileText
  *   Settings     → Settings (gear)
  */
-interface NavItem {
-  label: string;
-  icon: LucideIcon;
-  to: string;
-}
-
-const NAV_ITEMS: NavItem[] = [
-  { label: "Dashboard",    icon: icons.dashboard, to: "/"             },
-  { label: "Data History", icon: icons.lineChart,  to: "/data-history" },
-  { label: "Alerts",       icon: icons.bell,       to: "/alerts"       },
-  { label: "Reports",      icon: icons.reports,    to: "/reports"      },
-  { label: "Settings",     icon: icons.settings,   to: "/settings"     },
-];
 
 export function Sidebar() {
   return (

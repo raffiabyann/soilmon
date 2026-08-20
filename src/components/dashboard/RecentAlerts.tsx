@@ -2,7 +2,8 @@ import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/Card";
 import { icons } from "@/lib/icons";
 import { cn } from "@/lib/cn";
-import type { AlertCategory, AlertEntry, AlertSeverity } from "@/types/dashboard";
+import { ALERT_CATEGORY_ICON, ALERT_SEV_STYLE, ALERT_CATEGORY_STYLE } from "@/lib/alertStyles";
+import type { AlertEntry } from "@/types/dashboard";
 
 /**
  * Recent Alerts panel (design_specs §F).
@@ -12,40 +13,15 @@ import type { AlertCategory, AlertEntry, AlertSeverity } from "@/types/dashboard
  * title + detail, timestamp right-aligned.
  * "View all alerts →" link at bottom.
  *
- * Icon and color are resolved from alert.category — no title-string matching.
+ * Icon and color are resolved from alert.category via shared alertStyles config.
  */
 
-const SEV_STYLE: Record<AlertSeverity, { iconBg: string; iconText: string }> = {
-  error:   { iconBg: "bg-status-error/10",  iconText: "text-status-error"  },
-  warning: { iconBg: "bg-status-warn/10",   iconText: "text-status-warn"   },
-  info:    { iconBg: "bg-status-info/10",   iconText: "text-status-info"   },
-};
-
-/** Icon resolved by category — no title-string heuristics. */
-const CATEGORY_ICON: Record<AlertCategory, keyof typeof icons> = {
-  moisture:    "moisture",
-  ph:          "ph",
-  temperature: "temperature",
-  battery:     "battery",
-  power:       "solar",
-  signal:      "signal",
-  system:      "info",
-  generic:     "alert",
-};
-
-/** Color override for specific categories regardless of severity. */
-const CATEGORY_STYLE: Partial<Record<AlertCategory, { iconBg: string; iconText: string }>> = {
-  moisture: { iconBg: "bg-status-info/10", iconText: "text-status-info" },
-  battery:  { iconBg: "bg-status-warn/10", iconText: "text-status-warn" },
-  signal:   { iconBg: "bg-status-info/10", iconText: "text-status-info" },
-};
-
 function alertIconStyle(alert: AlertEntry): { iconBg: string; iconText: string } {
-  return CATEGORY_STYLE[alert.category] ?? SEV_STYLE[alert.severity];
+  return ALERT_CATEGORY_STYLE[alert.category] ?? ALERT_SEV_STYLE[alert.severity];
 }
 
 function AlertRow({ alert, last }: { alert: AlertEntry; last: boolean }) {
-  const iconKey = CATEGORY_ICON[alert.category];
+  const iconKey = ALERT_CATEGORY_ICON[alert.category];
   const Icon = icons[iconKey];
   const style = alertIconStyle(alert);
 
