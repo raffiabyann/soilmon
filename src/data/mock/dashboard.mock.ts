@@ -13,6 +13,8 @@ import type {
   EnvironmentalPoint,
   KpiCard,
   NodeData,
+  PowerData,
+  PowerHistoryPoint,
   SystemInfoEntry,
 } from "@/types/dashboard";
 
@@ -196,6 +198,72 @@ const systemInfo: SystemInfoEntry[] = [
   { id: "sys-last-sync",   label: "Last Sync",        value: ""             },
 ];
 
+/**
+ * 24-hour power history series (mock).
+ *
+ * Solar output follows a diurnal bell curve — zero at night, peaks near solar
+ * noon. Battery charges during the day and discharges slowly overnight.
+ * These are synthetic shapes for UI demonstration ONLY; they do NOT represent
+ * confirmed hardware specs, panel ratings, or real charge/discharge curves.
+ *
+ * TBD(hardware): replace with real gateway telemetry once the power monitoring
+ * contract is defined. Axis domains in PowerChart must also be revisited.
+ */
+function buildPowerHistory(): PowerHistoryPoint[] {
+  const points: PowerHistoryPoint[] = [];
+  for (let hour = 0; hour < 24; hour += 1) {
+    // Solar: bell curve centered on hour 12 (solar noon), zero outside daylight.
+    // Shape: sin²(π · (h−6) / 12) for h in [6, 18], else 0.
+    // Peak ~120 W is illustrative only — NOT a confirmed panel spec.
+    const inDaylight = hour >= 6 && hour <= 18;
+    const solarWatts = inDaylight
+      ? Math.round(120 * Math.pow(Math.sin((Math.PI * (hour - 6)) / 12), 2) * 10) / 10
+      : 0;
+
+    // Battery: starts ~72%, rises to ~91% during daylight, slowly drains at night.
+    // Rates are illustrative; real values depend on panel size, load, and capacity.
+    let batteryPercent: number;
+    if (hour < 6) {
+      // Pre-dawn drain from overnight discharge
+      batteryPercent = 72 + (hour / 6) * 0; // flat overnight starting value
+      batteryPercent = 72 - (5 - hour) * 0.8;
+    } else if (hour <= 18) {
+      // Charging during daylight
+      batteryPercent = 68 + ((hour - 6) / 12) * 23;
+    } else {
+      // Discharging after sunset
+      batteryPercent = 91 - ((hour - 18) / 6) * 8;
+    }
+    batteryPercent = Math.round(Math.max(0, Math.min(100, batteryPercent)) * 10) / 10;
+
+    points.push({
+      time: `${String(hour).padStart(2, "0")}:00`,
+      solarWatts,
+      batteryPercent,
+    });
+  }
+  return points;
+}
+
+/**
+ * Current-snapshot power data (mock).
+ *
+ * Snapshot is taken at a representative mid-afternoon moment (solar panel
+ * actively charging). All values are illustrative placeholders — NOT
+ * confirmed hardware specifications.
+ *
+ * TBD(hardware): voltage range, current range, and charging status derivation
+ * logic must be defined once the charge controller spec is confirmed.
+ */
+const power: PowerData = {
+  batteryPercent: 84,
+  solarInputWatts: 97,
+  chargingStatus: "charging",
+  voltage: 13.6,   // TBD(hardware): nominal range unknown
+  current: 7.1,    // TBD(hardware): nominal range unknown
+  history: buildPowerHistory(),
+};
+
 export const mockDashboardData: DashboardData = {
   summary,
   environmentalSeries: {
@@ -205,4 +273,5 @@ export const mockDashboardData: DashboardData = {
   nodes,
   alerts,
   systemInfo,
+  power,
 };

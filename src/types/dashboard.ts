@@ -136,6 +136,77 @@ export interface SystemInfoEntry {
 }
 
 /**
+ * Power supply charging status.
+ *
+ * Derived from panel/battery conditions. Exact derivation logic is TBD —
+ * depends on hardware spec (charge controller output, voltage thresholds, etc.).
+ * In mock data this is approximated from time-of-day.
+ */
+export type PowerChargingStatus = "charging" | "full" | "idle" | "low";
+
+/**
+ * One sample in the 24-hour power history series.
+ *
+ * Fields are optional so the chart renders whatever the gateway actually
+ * provides. Units and confirmed ranges are TBD pending hardware spec.
+ */
+export interface PowerHistoryPoint {
+  /** Display label for the x-axis — same format as EnvironmentalPoint ("HH:00"). */
+  time: string;
+  /**
+   * Solar panel output power.
+   * TBD(hardware): unit assumed watts; confirmed range unknown.
+   */
+  solarWatts?: number;
+  /**
+   * Battery state of charge.
+   * TBD(hardware): 0–100 % assumed; exact source/sensor unknown.
+   */
+  batteryPercent?: number;
+}
+
+/**
+ * Power monitoring data for the solar panel / battery system.
+ *
+ * All numeric fields carry TBD comments because the confirmed hardware spec
+ * (sensor type, voltage/current ranges, charge controller protocol) is NOT
+ * yet known. The shape is intentionally extensible — add fields once the
+ * hardware contract is defined without breaking existing consumers.
+ *
+ * This data is consumed only by PowerMonitorSection via the dashboard hook.
+ * Components must not import mock data directly.
+ */
+export interface PowerData {
+  /**
+   * Battery state of charge (%).
+   * TBD(hardware): source sensor and calibration curve unknown.
+   */
+  batteryPercent: number;
+  /**
+   * Instantaneous solar panel output.
+   * TBD(hardware): unit assumed W; confirmed panel rating unknown.
+   */
+  solarInputWatts: number;
+  /**
+   * Charging status derived from panel/battery state.
+   * TBD(hardware): exact derivation depends on charge controller output.
+   */
+  chargingStatus: PowerChargingStatus;
+  /**
+   * Panel/system supply voltage.
+   * TBD(hardware): nominal range unknown; displayed as-is.
+   */
+  voltage: number;
+  /**
+   * Charging current.
+   * TBD(hardware): nominal range unknown; displayed as-is.
+   */
+  current: number;
+  /** 24-hour history for the time-series chart. */
+  history: PowerHistoryPoint[];
+}
+
+/**
  * Full dashboard model (SPEC §22). Sections beyond the current stage are
  * optional and intentionally unpopulated.
  */
@@ -147,4 +218,12 @@ export interface DashboardData {
   alerts: AlertEntry[];
   /** System information rows (SPEC §12, §32.10). Visual placeholders — SPEC §32.19. */
   systemInfo: SystemInfoEntry[];
+  /**
+   * Power monitoring data (solar panel + battery).
+   *
+   * Optional — the dashboard renders the Power Monitor section only when this
+   * field is present. This allows the section to be omitted cleanly if the
+   * gateway does not yet supply power telemetry.
+   */
+  power?: PowerData;
 }

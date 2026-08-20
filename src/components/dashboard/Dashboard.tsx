@@ -1,6 +1,7 @@
 import { KpiRow } from "@/components/dashboard/KpiRow";
 import { EnvironmentalOverview } from "@/components/dashboard/EnvironmentalOverview";
 import { NodeGrid } from "@/components/dashboard/NodeGrid";
+import { PowerMonitorSection } from "@/components/dashboard/PowerMonitorSection";
 import { RecentAlerts } from "@/components/dashboard/RecentAlerts";
 import { SystemInformation } from "@/components/dashboard/SystemInformation";
 import { DashboardFooter } from "@/components/dashboard/DashboardFooter";
@@ -14,7 +15,7 @@ import { useDashboardData } from "@/hooks/useDashboardData";
  * hook (SPEC §22). All values are mock placeholders (SPEC §32.19).
  */
 export function Dashboard() {
-  const { summary, environmentalSeries, nodes, alerts, systemInfo } =
+  const { summary, environmentalSeries, nodes, alerts, systemInfo, power } =
     useDashboardData();
 
   return (
@@ -28,7 +29,10 @@ export function Dashboard() {
       {/* Row 3: Node status grid — no heading, follows directly */}
       <NodeGrid nodes={nodes} />
 
-      {/* Row 4: Recent Alerts (wider) + System Information — spec: ~60/40 */}
+      {/* Row 4: Power Monitor — rendered only when power data is present */}
+      {power && <PowerMonitorSection data={power} />}
+
+      {/* Row 5: Recent Alerts (wider) + System Information — spec: ~60/40 */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[3fr_2fr]">
         <RecentAlerts alerts={alerts} />
         <SystemInformation entries={systemInfo} />

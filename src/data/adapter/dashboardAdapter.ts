@@ -9,7 +9,7 @@
  * Presentational components must never import mock data or a transport client
  * directly — they consume the model via `useDashboardData`.
  */
-import type { DashboardData, EnvironmentalPoint, NodeData } from "@/types/dashboard";
+import type { DashboardData, EnvironmentalPoint, NodeData, PowerData } from "@/types/dashboard";
 import { mockDashboardData } from "@/data/mock/dashboard.mock";
 import { formatWibTime } from "@/lib/time";
 
@@ -91,5 +91,25 @@ export function refreshDashboardData(current: DashboardData): DashboardData {
     ...current,
     nodes,
     environmentalSeries: { ...current.environmentalSeries, points },
+    // Vary power telemetry if present. Variation bounds are illustrative —
+    // TBD(hardware): real bounds depend on panel rating and charge controller.
+    power: current.power
+      ? ((): PowerData => {
+          const p = current.power!;
+          return {
+            ...p,
+            // Battery varies ±0.2% per cycle (slow drain/charge simulation)
+            batteryPercent: Math.round(clamp(vary(p.batteryPercent, 0.4), 0, 100) * 10) / 10,
+            // Solar varies ±2 W per cycle (cloud cover simulation)
+            solarInputWatts: Math.round(Math.max(0, vary(p.solarInputWatts, 4)) * 10) / 10,
+            // Voltage varies ±0.05 V per cycle
+            voltage: Math.round(clamp(vary(p.voltage, 0.1), 0, 30) * 100) / 100,
+            // Current varies ±0.1 A per cycle
+            current: Math.round(Math.max(0, vary(p.current, 0.2)) * 100) / 100,
+            // History is static between refreshes — only live values update
+            history: p.history,
+          };
+        })()
+      : undefined,
   };
 }
