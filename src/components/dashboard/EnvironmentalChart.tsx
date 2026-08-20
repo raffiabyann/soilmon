@@ -61,7 +61,7 @@ export function EnvironmentalChart({ points }: { points: EnvironmentalPoint[] })
 
           <XAxis
             dataKey="time"
-            tick={{ fontSize: 10, fill: AXIS_COLOR }}
+            tick={{ fontSize: 11, fill: AXIS_COLOR }}
             tickLine={false}
             axisLine={{ stroke: GRID_COLOR }}
             ticks={["00:00", "04:00", "08:00", "12:00", "16:00", "20:00", "24:00"]}
@@ -73,7 +73,7 @@ export function EnvironmentalChart({ points }: { points: EnvironmentalPoint[] })
             yAxisId="left"
             domain={[0, 40]}
             ticks={[0, 10, 20, 30, 40]}
-            tick={{ fontSize: 10, fill: AXIS_COLOR }}
+            tick={{ fontSize: 11, fill: AXIS_COLOR }}
             tickLine={false}
             axisLine={false}
             width={32}
@@ -85,7 +85,7 @@ export function EnvironmentalChart({ points }: { points: EnvironmentalPoint[] })
             orientation="right"
             domain={[0, 14]}
             ticks={[0, 3.5, 7, 10.5, 14]}
-            tick={{ fontSize: 10, fill: AXIS_COLOR }}
+            tick={{ fontSize: 11, fill: AXIS_COLOR }}
             tickLine={false}
             axisLine={false}
             width={32}

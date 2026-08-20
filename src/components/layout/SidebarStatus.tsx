@@ -48,11 +48,14 @@ export function SidebarStatus() {
       {/* Gateway Online */}
       <div className="flex items-center gap-2">
         <span className="h-2 w-2 shrink-0 rounded-full bg-status-ok" aria-hidden />
-        <span className="text-[13px] font-bold tracking-tight text-sidebar-text">Gateway Online</span>
+        <div className="flex min-w-0 flex-col">
+          <span className="text-[13px] font-bold tracking-tight text-sidebar-text leading-tight">Gateway Online</span>
+          <span className="text-[10px] text-sidebar-text/50 leading-tight tracking-wide">Simulated</span>
+        </div>
       </div>
 
       {/* Last Sync — updates after each data refresh */}
-      <div className="flex items-center justify-between text-[11px] text-sidebar-text/60">
+      <div className="flex items-center justify-between text-[11px] text-sidebar-text/60 lg:text-[13px]">
         <span className="flex items-center gap-1.5">
           <ClockIcon className="h-3 w-3" strokeWidth={2} aria-hidden />
           Last Sync
@@ -61,7 +64,7 @@ export function SidebarStatus() {
       </div>
 
       {/* Auto Refresh — real toggle, shared state with Header */}
-      <div className="flex items-center justify-between text-[11px] text-sidebar-text/60">
+      <div className="flex items-center justify-between text-[11px] text-sidebar-text/60 lg:text-[13px]">
         <span className="flex items-center gap-1.5">
           <Refresh className="h-3 w-3" strokeWidth={2} aria-hidden />
           Auto Refresh

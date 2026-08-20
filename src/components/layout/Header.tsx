@@ -36,7 +36,7 @@ export function Header({ onMenuOpen }: HeaderProps) {
         <h1 className="truncate text-[17px] font-semibold tracking-tight text-text lg:text-[22px]">
           Dashboard
         </h1>
-        <p className="hidden text-xs text-muted lg:block">Monitoring overview</p>
+        <p className="hidden text-xs text-muted lg:block lg:text-sm">Monitoring overview</p>
       </div>
 
       {/* Compact Auto Refresh — mobile only, icon + state label */}

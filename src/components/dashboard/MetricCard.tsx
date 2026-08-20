@@ -120,7 +120,7 @@ export function MetricCard({ card }: { card: KpiCard }) {
           )}
         </div>
         {card.secondary && (
-          <p className="mt-0.5 text-[11px] text-muted">{card.secondary}</p>
+          <p className="mt-0.5 text-[11px] text-muted lg:text-[13px]">{card.secondary}</p>
         )}
       </div>
 

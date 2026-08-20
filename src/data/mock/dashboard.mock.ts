@@ -17,6 +17,7 @@ import type {
   PowerData,
   PowerHistoryPoint,
   SystemInfoEntry,
+  TelemetryRecord,
 } from "@/types/dashboard";
 
 /** Four KPI / summary cards in the exact approved order (SPEC §32.7). */
@@ -26,33 +27,33 @@ const summary: KpiCard[] = [
     icon: "gateway",
     label: "Gateway Status",
     value: "Online",
-    secondary: undefined,
+    secondary: "Simulated",
     status: "ok",
   },
   {
     id: "data-received-today",
     icon: "database",
     label: "Data Received (Today)",
-    value: "1,248",
-    secondary: "records",
+    value: "—",
+    secondary: undefined,
     status: "info",
   },
   {
     id: "data-trend-24h",
     icon: "chart",
     label: "Data Trend (24 Hours)",
-    value: "+12.4%",
-    secondary: "vs yesterday",
-    status: "ok",
-    trend: "up",
+    value: "—",
+    secondary: undefined,
+    status: undefined,
+    trend: undefined,
   },
   {
     id: "system-uptime",
     icon: "clock4",
     label: "System Uptime",
-    value: "99.8%",
-    secondary: "7 hari 14 jam",
-    status: "ok",
+    value: "—",
+    secondary: undefined,
+    status: undefined,
   },
 ];
 
@@ -115,7 +116,7 @@ const nodes: NodeData[] = [
     lastUpdate: "10:24 WIB",
     telemetry: [
       { key: "temperature", value: 32.5,  unit: "°C",  status: "ok" },
-      { key: "moisture",    value: 55,    unit: "%",   status: "warning" },
+      { key: "moisture",    value: 55,    unit: "%",   status: "ok" },
       { key: "ph",          value: 6.2,   unit: "",    status: "ok" },
       { key: "battery",     value: 85,    unit: "%",   status: "ok" },
       { key: "rssi",        value: -70,   unit: " dBm", status: "ok" },
@@ -130,7 +131,7 @@ const nodes: NodeData[] = [
     telemetry: [
       { key: "temperature", value: 27.8,  unit: "°C",  status: "ok" },
       { key: "moisture",    value: 58,    unit: "%",   status: "ok" },
-      { key: "ph",          value: 4.8,   unit: "",    status: "error" },
+      { key: "ph",          value: 4.8,   unit: "",    status: "ok" },
       { key: "battery",     value: 78,    unit: "%",   status: "ok" },
       { key: "rssi",        value: -72,   unit: " dBm", status: "ok" },
     ],
@@ -144,7 +145,7 @@ const nodes: NodeData[] = [
     telemetry: [
       { key: "temperature", value: 29.1,  unit: "°C",  status: "ok" },
       { key: "moisture",    value: 62,    unit: "%",   status: "ok" },
-      { key: "ph",          value: 8.1,   unit: "",    status: "warning" },
+      { key: "ph",          value: 8.1,   unit: "",    status: "ok" },
       { key: "battery",     value: 70,    unit: "%",   status: "ok" },
       { key: "rssi",        value: -72,   unit: " dBm", status: "ok" },
     ],
@@ -160,61 +161,22 @@ const nodes: NodeData[] = [
  *
  * Each entry now carries a `category` field so UI components can resolve icons
  * and filter labels without brittle title-string matching.
+ *
+ * Threshold-based alerts (pH, moisture, battery, temperature) are NOT included
+ * here because no sensor thresholds have been confirmed yet. Only
+ * infrastructure/connectivity alerts are present as conceptual examples.
+ * TBD(hardware): threshold-based alerts will be added once threshold rules
+ * are confirmed via the hardware R&D process.
  */
 const alerts: AlertEntry[] = [
-  {
-    id: "alert-1",
-    severity: "warning",
-    category: "ph",
-    title: "pH Level Warning",
-    detail: "Node 3 (Kebun Selatan) - pH di bawah rentang normal",
-    time: "10:15 WIB",
-    nodeId: "node-3",
-  },
-  {
-    id: "alert-2",
-    severity: "warning",
-    category: "moisture",
-    title: "Moisture Low",
-    detail: "Node 2 (Kebun Tengah) - Kelembaban tanah rendah",
-    time: "09:45 WIB",
-    nodeId: "node-2",
-  },
-  {
-    id: "alert-3",
-    severity: "info",
-    category: "battery",
-    title: "Battery Low",
-    detail: "Node 3 (Kebun Selatan) - Battery level 78%",
-    time: "09:30 WIB",
-    nodeId: "node-3",
-  },
-  {
-    id: "alert-4",
-    severity: "warning",
-    category: "ph",
-    title: "pH Level Warning",
-    detail: "Node 4 (Kebun Barat) - pH di atas rentang normal",
-    time: "08:55 WIB",
-    nodeId: "node-4",
-  },
   {
     id: "alert-5",
     severity: "info",
     category: "signal",
     title: "Signal Weak",
-    detail: "Node 4 (Kebun Barat) - RSSI -72 dBm, sinyal lemah",
+    detail: "Node 4 (Kebun Barat) - Sinyal koneksi lemah",
     time: "08:20 WIB",
     nodeId: "node-4",
-  },
-  {
-    id: "alert-6",
-    severity: "error",
-    category: "system",
-    title: "Node Offline",
-    detail: "Node 1 (Kebun Utara) - Tidak ada respons selama 5 menit",
-    time: "07:45 WIB",
-    nodeId: "node-1",
   },
 ];
 
@@ -226,10 +188,10 @@ const alerts: AlertEntry[] = [
  * or network details.
  */
 const systemInfo: SystemInfoEntry[] = [
-  { id: "sys-fw-version",  label: "Firmware Version", value: "v1.2.3"       },
-  { id: "sys-network",     label: "Network",          value: "LoRa 868 MHz" },
-  { id: "sys-wifi-signal", label: "WiFi Signal",      value: "-61 dBm"      },
-  { id: "sys-last-sync",   label: "Last Sync",        value: ""             },
+  { id: "sys-fw-version",  label: "Firmware Version", value: "—" },
+  { id: "sys-network",     label: "Network",          value: "—" },
+  { id: "sys-wifi-signal", label: "WiFi Signal",      value: "—" },
+  { id: "sys-last-sync",   label: "Last Sync",        value: ""  },
 ];
 
 /**
@@ -292,7 +254,7 @@ function buildPowerHistory(): PowerHistoryPoint[] {
 const power: PowerData = {
   batteryPercent: 84,
   solarInputWatts: 97,
-  chargingStatus: "charging",
+  chargingStatus: "unknown",
   voltage: 13.6,   // TBD(hardware): nominal range unknown
   current: 7.1,    // TBD(hardware): nominal range unknown
   history: buildPowerHistory(),
@@ -313,24 +275,24 @@ const irrigationZones: IrrigationZone[] = [
     id: "zone-1",
     name: "Zona 1",
     location: "Kebun Utara",
-    status: "active",
-    lastActivity: "10:20 WIB",
+    status: "unknown",
+    lastActivity: "—",
     nodeId: "node-1",
   },
   {
     id: "zone-2",
     name: "Zona 2",
     location: "Kebun Tengah",
-    status: "inactive",
-    lastActivity: "08:00 WIB",
+    status: "unknown",
+    lastActivity: "—",
     nodeId: "node-2",
   },
   {
     id: "zone-3",
     name: "Zona 3",
     location: "Kebun Selatan",
-    status: "inactive",
-    lastActivity: "07:30 WIB",
+    status: "unknown",
+    lastActivity: "—",
     nodeId: "node-3",
   },
   {
@@ -343,6 +305,102 @@ const irrigationZones: IrrigationZone[] = [
   },
 ];
 
+/**
+ * Historical telemetry records (mock).
+ *
+ * Generated from the same 4 nodes and 5 metrics as the live dashboard.
+ * 24 hourly snapshots per node per metric = 4 × 5 × 24 = 480 records.
+ * Values follow the same diurnal sine curves used in buildEnvironmentalPoints()
+ * so the history is visually consistent with the live charts.
+ *
+ * Sorted newest-first (highest timestampMs first).
+ *
+ * TBD(backend): real records will come from the gateway/backend data contract.
+ * Timestamps are approximated using Date.now() at module init time — they will
+ * drift if the page is loaded much later, which is acceptable for mock data.
+ * Real timestamps, date range, and retention policy are unknown until the
+ * telemetry contract is confirmed.
+ */
+function buildTelemetryHistory(): TelemetryRecord[] {
+  const now = Date.now();
+
+  // Node base values and per-metric config — mirrors the nodes[] mock data.
+  const nodeConfigs = [
+    {
+      id: "node-1", name: "Node 1", location: "Kebun Utara",
+      base: { temperature: 28.5, moisture: 65, ph: 6.5, battery: 92, rssi: -67 },
+      status: { temperature: "ok", moisture: "ok", ph: "ok", battery: "ok", rssi: "ok" } as Record<string, string>,
+    },
+    {
+      id: "node-2", name: "Node 2", location: "Kebun Tengah",
+      base: { temperature: 32.5, moisture: 55, ph: 6.2, battery: 85, rssi: -70 },
+      status: { temperature: "ok", moisture: "ok", ph: "ok", battery: "ok", rssi: "ok" } as Record<string, string>,
+    },
+    {
+      id: "node-3", name: "Node 3", location: "Kebun Selatan",
+      base: { temperature: 27.8, moisture: 58, ph: 4.8, battery: 78, rssi: -72 },
+      status: { temperature: "ok", moisture: "ok", ph: "ok", battery: "ok", rssi: "ok" } as Record<string, string>,
+    },
+    {
+      id: "node-4", name: "Node 4", location: "Kebun Barat",
+      base: { temperature: 29.1, moisture: 62, ph: 8.1, battery: 70, rssi: -72 },
+      status: { temperature: "ok", moisture: "ok", ph: "ok", battery: "ok", rssi: "ok" } as Record<string, string>,
+    },
+  ] as const;
+
+  const metricUnits: Record<string, string> = {
+    temperature: "°C",
+    moisture:    "%",
+    ph:          "",
+    battery:     "%",
+    rssi:        " dBm",
+  };
+
+  const records: TelemetryRecord[] = [];
+
+  for (const node of nodeConfigs) {
+    for (let hour = 0; hour < 24; hour++) {
+      const tsMs = now - (23 - hour) * 3_600_000;
+      const phase = (hour / 24) * Math.PI * 2;
+
+      // Apply same diurnal variation used in buildEnvironmentalPoints()
+      const variation: Record<string, number> = {
+        temperature: Math.sin(phase - Math.PI / 2) * 3,
+        moisture:    Math.cos(phase - Math.PI * 0.6) * 2.5,
+        ph:          Math.sin(phase - Math.PI / 2) * 0.2,
+        battery:     -((23 - hour) / 24) * 5, // slow drain toward oldest
+        rssi:        Math.sin(phase) * 3,
+      };
+
+      const date = new Date(tsMs);
+      const hh = String(date.getHours()).padStart(2, "0");
+      const mm = String(date.getMinutes()).padStart(2, "0");
+      const timestamp = `${hh}:${mm} WIB`;
+
+      for (const metric of ["temperature", "moisture", "ph", "battery", "rssi"] as const) {
+        const rawValue = (node.base[metric] as number) + variation[metric];
+        const value = Math.round(rawValue * 10) / 10;
+
+        records.push({
+          id:           `${node.id}-${metric}-${hour}`,
+          timestamp,
+          timestampMs:  tsMs,
+          nodeId:       node.id,
+          nodeName:     node.name,
+          nodeLocation: node.location,
+          metric,
+          value,
+          unit:         metricUnits[metric],
+          status:       "ok" as TelemetryRecord["status"],
+        });
+      }
+    }
+  }
+
+  // Sort newest first
+  return records.sort((a, b) => b.timestampMs - a.timestampMs);
+}
+
 export const mockDashboardData: DashboardData = {
   summary,
   environmentalSeries: {
@@ -354,4 +412,5 @@ export const mockDashboardData: DashboardData = {
   systemInfo,
   power,
   irrigationZones,
+  history: buildTelemetryHistory(),
 };

@@ -64,7 +64,7 @@ function PrimaryMetric({ metric }: { metric: NodeMetric }) {
           <span className="ml-0.5 text-sm font-normal text-muted">{metric.unit}</span>
         )}
       </span>
-      <span className="text-[11px] text-muted">{label}</span>
+      <span className="text-[11px] text-muted lg:text-[13px]">{label}</span>
     </div>
   );
 }
@@ -144,7 +144,7 @@ export function NodeCard({ node }: { node: NodeData }) {
               <MetaItem key={m.key} metric={m} />
             ))}
           </div>
-          <div className="flex items-center gap-1 text-[11px] text-muted">
+          <div className="flex items-center gap-1 text-[11px] text-muted lg:text-[13px]">
             <icons.clock className="h-3 w-3" strokeWidth={2} aria-hidden />
             <span className="tabular-nums">{node.lastUpdate}</span>
           </div>

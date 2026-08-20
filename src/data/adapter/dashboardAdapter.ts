@@ -102,10 +102,10 @@ export function refreshDashboardData(current: DashboardData): DashboardData {
             batteryPercent: Math.round(clamp(vary(p.batteryPercent, 0.4), 0, 100) * 10) / 10,
             // Solar varies ±2 W per cycle (cloud cover simulation)
             solarInputWatts: Math.round(Math.max(0, vary(p.solarInputWatts, 4)) * 10) / 10,
-            // Voltage varies ±0.05 V per cycle
-            voltage: Math.round(clamp(vary(p.voltage, 0.1), 0, 30) * 100) / 100,
-            // Current varies ±0.1 A per cycle
-            current: Math.round(Math.max(0, vary(p.current, 0.2)) * 100) / 100,
+            // voltage and current are not displayed in UI — pass through unchanged
+            // TBD(hardware): re-enable variation once hardware spec confirms source/range
+            voltage: p.voltage,
+            current: p.current,
             // History is static between refreshes — only live values update
             history: p.history,
           };
@@ -114,5 +114,9 @@ export function refreshDashboardData(current: DashboardData): DashboardData {
     // Irrigation zone status is static — no variation between refreshes.
     // TBD(hardware): when real actuator data is available, map it here.
     irrigationZones: current.irrigationZones,
+    // Historical records are static — auto-refresh must NOT regenerate them.
+    // TBD(backend): real records will be fetched from the backend on demand,
+    // not re-derived from live telemetry on each poll cycle.
+    history: current.history,
   };
 }

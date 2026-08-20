@@ -199,7 +199,7 @@ export interface SystemInfoEntry {
  * depends on hardware spec (charge controller output, voltage thresholds, etc.).
  * In mock data this is approximated from time-of-day.
  */
-export type PowerChargingStatus = "charging" | "full" | "idle" | "low";
+export type PowerChargingStatus = "charging" | "full" | "idle" | "low" | "unknown";
 
 /**
  * One sample in the 24-hour power history series.
@@ -264,6 +264,45 @@ export interface PowerData {
 }
 
 /**
+ * Metric key type for historical records.
+ *
+ * Mirrors NodeMetricKey — kept as a separate alias so the history model
+ * can evolve independently if the confirmed sensor set changes.
+ */
+export type TelemetryMetricKey = NodeMetricKey;
+
+/**
+ * A single historical telemetry reading — the atomic unit for Data History.
+ *
+ * Flat structure suitable for tabular display and future filtering/sorting.
+ * All values are mock/simulated during frontend development.
+ *
+ * TBD(backend): real records will come from the gateway/backend data contract.
+ * Timestamps are approximated from Date.now() in mock; exact format and
+ * retention policy are unknown until the telemetry contract is confirmed.
+ */
+export interface TelemetryRecord {
+  /** Unique row ID — used as React key. */
+  id: string;
+  /** Display timestamp string, e.g. "10:24 WIB". */
+  timestamp: string;
+  /**
+   * Sortable epoch milliseconds.
+   * TBD(backend): real value will come from gateway timestamp.
+   * Mock value: Date.now() − (hours offset × 3600_000).
+   */
+  timestampMs: number;
+  nodeId: string;
+  nodeName: string;
+  nodeLocation: string;
+  metric: TelemetryMetricKey;
+  value: number;
+  unit: string;
+  /** Visual status placeholder — NOT derived from real thresholds. */
+  status: StatusLevel;
+}
+
+/**
  * Full dashboard model (SPEC §22). Sections beyond the current stage are
  * optional and intentionally unpopulated.
  */
@@ -292,4 +331,13 @@ export interface DashboardData {
    * be confirmed before any automation behavior is added.
    */
   irrigationZones?: IrrigationZone[];
+  /**
+   * Historical telemetry records for the Data History page.
+   *
+   * Optional — the page is absent if not provided.
+   * TBD(backend): real records will come from the gateway/backend data contract
+   * once confirmed. Mock data uses Date.now() to approximate timestamps and
+   * derives values from the same synthetic curves as the live dashboard.
+   */
+  history?: TelemetryRecord[];
 }

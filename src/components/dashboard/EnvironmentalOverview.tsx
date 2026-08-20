@@ -22,14 +22,14 @@ export function EnvironmentalOverview({ series }: { series: EnvironmentalSeries 
           <h2 className="text-sm font-semibold text-text leading-tight">
             Environmental Overview (24 Hours)
           </h2>
-          <p className="text-[11px] text-muted leading-tight">Soil &amp; environmental trend</p>
+          <p className="text-[11px] text-muted leading-tight lg:text-[13px]">Soil &amp; environmental trend</p>
         </div>
 
-        {/* Legend + range selector */}
+        {/* Legend only — range pill removed (single range, not interactive) */}
         <div className="flex items-center gap-4">
           <ul className="hidden items-center gap-4 md:flex">
             {ENVIRONMENTAL_METRICS.map((m) => (
-              <li key={m.label} className="flex items-center gap-1.5 text-[11px] text-muted">
+              <li key={m.label} className="flex items-center gap-1.5 text-[11px] text-muted lg:text-[13px]">
                 <span
                   className="inline-block h-2 w-2 rounded-full"
                   style={{ backgroundColor: m.color }}
@@ -38,11 +38,6 @@ export function EnvironmentalOverview({ series }: { series: EnvironmentalSeries 
               </li>
             ))}
           </ul>
-          <div className="inline-flex rounded-inner border border-border p-0.5">
-            <span className="rounded-[6px] bg-accent px-2.5 py-1 text-[11px] font-medium text-white">
-              24 Hours
-            </span>
-          </div>
         </div>
       </div>
 

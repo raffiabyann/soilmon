@@ -45,6 +45,7 @@ const CHARGING_STATUS_LEVEL: Record<PowerChargingStatus, StatusLevel> = {
   full:     "ok",
   idle:     "info",
   low:      "warning",
+  unknown:  "info",
 };
 
 const CHARGING_STATUS_LABEL: Record<PowerChargingStatus, string> = {
@@ -52,6 +53,7 @@ const CHARGING_STATUS_LABEL: Record<PowerChargingStatus, string> = {
   full:     "Full",
   idle:     "Idle",
   low:      "Low Battery",
+  unknown:  "Status tidak diketahui",
 };
 
 // ─── Chart legend items ───────────────────────────────────────────────────────
@@ -74,7 +76,7 @@ function StatTile({ icon, label, value, unit }: StatTileProps) {
     <div className="flex min-w-0 flex-col gap-0.5">
       <div className="flex items-center gap-1.5">
         <Icon className="h-3.5 w-3.5 shrink-0 text-muted" strokeWidth={1.8} aria-hidden />
-        <span className="text-[11px] text-muted truncate">{label}</span>
+        <span className="text-[11px] text-muted truncate lg:text-[13px]">{label}</span>
       </div>
       <div className="flex items-baseline gap-1">
         <span className="text-[22px] font-bold tabular-nums leading-none text-text">
@@ -98,7 +100,7 @@ function PowerTooltip({
 }) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded-inner border border-border bg-surface px-3 py-2 text-[11px] shadow-card">
+    <div className="rounded-inner border border-border bg-surface px-3 py-2 text-[12px] shadow-card">
       <p className="mb-1 font-medium text-text">{label}</p>
       {payload.map((entry) => (
         <p key={entry.name} style={{ color: entry.color }} className="tabular-nums">
@@ -139,7 +141,7 @@ function PowerChart({ data }: { data: PowerData["history"] }) {
           {/* X axis — hourly ticks every 4 hours, same as EnvironmentalChart */}
           <XAxis
             dataKey="time"
-            tick={{ fontSize: 10, fill: AXIS_COLOR }}
+            tick={{ fontSize: 11, fill: AXIS_COLOR }}
             tickLine={false}
             axisLine={{ stroke: GRID_COLOR }}
             ticks={["00:00", "04:00", "08:00", "12:00", "16:00", "20:00"]}
@@ -149,7 +151,7 @@ function PowerChart({ data }: { data: PowerData["history"] }) {
           <YAxis
             yAxisId="left"
             orientation="left"
-            tick={{ fontSize: 10, fill: AXIS_COLOR }}
+            tick={{ fontSize: 11, fill: AXIS_COLOR }}
             tickLine={false}
             axisLine={false}
             domain={[0, 140]}
@@ -161,7 +163,7 @@ function PowerChart({ data }: { data: PowerData["history"] }) {
           <YAxis
             yAxisId="right"
             orientation="right"
-            tick={{ fontSize: 10, fill: AXIS_COLOR }}
+            tick={{ fontSize: 11, fill: AXIS_COLOR }}
             tickLine={false}
             axisLine={false}
             domain={[0, 100]}
@@ -230,7 +232,7 @@ export function PowerMonitorSection({ data }: PowerMonitorSectionProps) {
             </h2>
             <StatusBadge status={statusLevel} label={statusLabel} />
           </div>
-          <p className="mt-0.5 text-[11px] text-muted leading-tight">
+          <p className="mt-0.5 text-[11px] text-muted leading-tight lg:text-[13px]">
             Solar panel &amp; battery — simulated data
           </p>
         </div>
@@ -238,7 +240,7 @@ export function PowerMonitorSection({ data }: PowerMonitorSectionProps) {
         {/* Chart legend — hidden on small screens to avoid overflow */}
         <ul className="hidden items-center gap-4 md:flex" aria-hidden>
           {POWER_METRICS.map((m) => (
-            <li key={m.label} className="flex items-center gap-1.5 text-[11px] text-muted">
+            <li key={m.label} className="flex items-center gap-1.5 text-[11px] text-muted lg:text-[13px]">
               <span
                 className="inline-block h-2 w-2 shrink-0 rounded-full"
                 style={{ backgroundColor: m.color }}
@@ -251,14 +253,14 @@ export function PowerMonitorSection({ data }: PowerMonitorSectionProps) {
 
       {/* ── Stat tiles — responsive grid ── */}
       {/*
-        2 columns on mobile, 4 on sm+.
-        Uses divide-x on sm+ for the separator lines seen on NodeCard.
-        On mobile the grid gap serves as visual separation.
+        2 tiles: Battery and Solar Input.
+        Voltage and Current are kept in the data model (TBD hardware) but
+        not displayed until the hardware spec confirms their source/range.
       */}
       <div
         className={cn(
           "mb-4 grid grid-cols-2 gap-x-4 gap-y-4",
-          "sm:grid-cols-4 sm:gap-y-0 sm:divide-x sm:divide-border",
+          "sm:gap-y-0 sm:divide-x sm:divide-border",
         )}
         role="list"
         aria-label="Power metrics"
@@ -271,28 +273,12 @@ export function PowerMonitorSection({ data }: PowerMonitorSectionProps) {
             unit="%"
           />
         </div>
-        <div role="listitem" className="sm:px-4">
+        <div role="listitem" className="sm:pl-4">
           <StatTile
             icon="solar"
             label="Solar Input"
             value={String(data.solarInputWatts)}
             unit="W"
-          />
-        </div>
-        <div role="listitem" className="sm:px-4">
-          <StatTile
-            icon="zap"
-            label="Voltage"
-            value={String(data.voltage)}
-            unit="V"
-          />
-        </div>
-        <div role="listitem" className="sm:pl-4">
-          <StatTile
-            icon="zap"
-            label="Current"
-            value={String(data.current)}
-            unit="A"
           />
         </div>
       </div>
