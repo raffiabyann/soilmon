@@ -108,9 +108,31 @@ export interface NodeData {
  */
 export type AlertSeverity = "warning" | "error" | "info";
 
+/**
+ * Semantic category for an alert.
+ *
+ * Used for icon resolution and filtering — replaces fragile title-string
+ * matching. Categories map to sensor/system domains; the exact set may grow
+ * once the real alert contract is confirmed.
+ */
+export type AlertCategory =
+  | "moisture"
+  | "ph"
+  | "temperature"
+  | "battery"
+  | "power"
+  | "signal"
+  | "system"
+  | "generic";
+
 export interface AlertEntry {
   id: string;
   severity: AlertSeverity;
+  /**
+   * Semantic category for icon resolution and filtering.
+   * Replaces fragile title-string matching in UI components.
+   */
+  category: AlertCategory;
   /** Short human-readable alert title (e.g. "Low Signal Strength"). */
   title: string;
   /** Optional supporting detail line. */
@@ -118,6 +140,41 @@ export interface AlertEntry {
   /** Display timestamp string (mock — SPEC §32.19). */
   time: string;
   /** Optional node this alert is associated with. */
+  nodeId?: string;
+}
+
+/**
+ * Irrigation zone availability state.
+ *
+ * TBD(hardware): exact semantics depend on actuator/valve hardware spec.
+ * This is a display-only status — no control logic is implemented.
+ */
+export type IrrigationZoneStatus = "active" | "inactive" | "unknown";
+
+/**
+ * A single irrigation zone for display purposes.
+ *
+ * This data structure is a UI placeholder only. No actuator logic,
+ * trigger rules, or automation behavior is implemented. All fields
+ * are TBD until the irrigation hardware contract is confirmed.
+ *
+ * TBD(hardware): zone boundaries, valve/pump spec, control protocol.
+ */
+export interface IrrigationZone {
+  id: string;
+  name: string;
+  location: string;
+  /**
+   * Current zone status.
+   * TBD(hardware): source and derivation logic unknown until hardware spec confirmed.
+   */
+  status: IrrigationZoneStatus;
+  /**
+   * Display string for last known activity.
+   * TBD(hardware): meaning and source unknown — shown as-is.
+   */
+  lastActivity: string;
+  /** Optional node ID this zone is associated with. */
   nodeId?: string;
 }
 
@@ -226,4 +283,13 @@ export interface DashboardData {
    * gateway does not yet supply power telemetry.
    */
   power?: PowerData;
+  /**
+   * Irrigation zone states — display only.
+   *
+   * Optional — the Alerts page renders the Irrigation Zones section only when
+   * this field is present. No actuator logic or trigger rules are implemented.
+   * TBD(hardware): zone boundaries, valve/pump spec, and control protocol must
+   * be confirmed before any automation behavior is added.
+   */
+  irrigationZones?: IrrigationZone[];
 }

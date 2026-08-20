@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/Card";
 import { icons } from "@/lib/icons";
 import { cn } from "@/lib/cn";
-import type { AlertEntry, AlertSeverity } from "@/types/dashboard";
+import type { AlertCategory, AlertEntry, AlertSeverity } from "@/types/dashboard";
 
 /**
  * Recent Alerts panel (design_specs §F).
@@ -12,10 +12,7 @@ import type { AlertEntry, AlertSeverity } from "@/types/dashboard";
  * title + detail, timestamp right-aligned.
  * "View all alerts →" link at bottom.
  *
- * Spec icon mapping per alert:
- *   pH Level Warning  → TriangleAlert (orange)
- *   Moisture Low      → Droplet (blue)
- *   Battery Low       → Battery (orange)
+ * Icon and color are resolved from alert.category — no title-string matching.
  */
 
 const SEV_STYLE: Record<AlertSeverity, { iconBg: string; iconText: string }> = {
@@ -24,28 +21,32 @@ const SEV_STYLE: Record<AlertSeverity, { iconBg: string; iconText: string }> = {
   info:    { iconBg: "bg-status-info/10",   iconText: "text-status-info"   },
 };
 
-/** Per-alert icon: use semantic icon based on title content */
-function alertIcon(alert: AlertEntry) {
-  const t = alert.title.toLowerCase();
-  if (t.includes("moisture")) return icons.moisture;
-  if (t.includes("battery")) return icons.battery;
-  return icons.alert; // pH warning or generic
-}
+/** Icon resolved by category — no title-string heuristics. */
+const CATEGORY_ICON: Record<AlertCategory, keyof typeof icons> = {
+  moisture:    "moisture",
+  ph:          "ph",
+  temperature: "temperature",
+  battery:     "battery",
+  power:       "solar",
+  signal:      "signal",
+  system:      "info",
+  generic:     "alert",
+};
 
-/** Per-alert icon color: moisture=blue, battery=orange, pH warning=orange */
+/** Color override for specific categories regardless of severity. */
+const CATEGORY_STYLE: Partial<Record<AlertCategory, { iconBg: string; iconText: string }>> = {
+  moisture: { iconBg: "bg-status-info/10", iconText: "text-status-info" },
+  battery:  { iconBg: "bg-status-warn/10", iconText: "text-status-warn" },
+  signal:   { iconBg: "bg-status-info/10", iconText: "text-status-info" },
+};
+
 function alertIconStyle(alert: AlertEntry): { iconBg: string; iconText: string } {
-  const t = alert.title.toLowerCase();
-  if (t.includes("moisture")) {
-    return { iconBg: "bg-status-info/10", iconText: "text-status-info" };
-  }
-  if (t.includes("battery")) {
-    return { iconBg: "bg-status-warn/10", iconText: "text-status-warn" };
-  }
-  return SEV_STYLE[alert.severity];
+  return CATEGORY_STYLE[alert.category] ?? SEV_STYLE[alert.severity];
 }
 
 function AlertRow({ alert, last }: { alert: AlertEntry; last: boolean }) {
-  const Icon = alertIcon(alert);
+  const iconKey = CATEGORY_ICON[alert.category];
+  const Icon = icons[iconKey];
   const style = alertIconStyle(alert);
 
   return (

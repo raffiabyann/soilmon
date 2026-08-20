@@ -111,5 +111,8 @@ export function refreshDashboardData(current: DashboardData): DashboardData {
           };
         })()
       : undefined,
+    // Irrigation zone status is static — no variation between refreshes.
+    // TBD(hardware): when real actuator data is available, map it here.
+    irrigationZones: current.irrigationZones,
   };
 }

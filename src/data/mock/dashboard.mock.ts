@@ -11,6 +11,7 @@ import type {
   AlertEntry,
   DashboardData,
   EnvironmentalPoint,
+  IrrigationZone,
   KpiCard,
   NodeData,
   PowerData,
@@ -156,31 +157,64 @@ const nodes: NodeData[] = [
  * Alert mechanism is NOT confirmed (SPEC §11). These are visual placeholders
  * only (SPEC §32.19). Structure kept minimal so the real alert contract can
  * be dropped in without changing the component.
+ *
+ * Each entry now carries a `category` field so UI components can resolve icons
+ * and filter labels without brittle title-string matching.
  */
 const alerts: AlertEntry[] = [
   {
     id: "alert-1",
     severity: "warning",
+    category: "ph",
     title: "pH Level Warning",
-    detail: "Node 3 (Kebun Selatan) - pH is below normal range",
+    detail: "Node 3 (Kebun Selatan) - pH di bawah rentang normal",
     time: "10:15 WIB",
     nodeId: "node-3",
   },
   {
     id: "alert-2",
     severity: "warning",
+    category: "moisture",
     title: "Moisture Low",
-    detail: "Node 2 (Kebun Tengah) - Soil moisture is low",
+    detail: "Node 2 (Kebun Tengah) - Kelembaban tanah rendah",
     time: "09:45 WIB",
     nodeId: "node-2",
   },
   {
     id: "alert-3",
     severity: "info",
+    category: "battery",
     title: "Battery Low",
-    detail: "Node 3 (Kebun Selatan) - Battery level is 78%",
+    detail: "Node 3 (Kebun Selatan) - Battery level 78%",
     time: "09:30 WIB",
     nodeId: "node-3",
+  },
+  {
+    id: "alert-4",
+    severity: "warning",
+    category: "ph",
+    title: "pH Level Warning",
+    detail: "Node 4 (Kebun Barat) - pH di atas rentang normal",
+    time: "08:55 WIB",
+    nodeId: "node-4",
+  },
+  {
+    id: "alert-5",
+    severity: "info",
+    category: "signal",
+    title: "Signal Weak",
+    detail: "Node 4 (Kebun Barat) - RSSI -72 dBm, sinyal lemah",
+    time: "08:20 WIB",
+    nodeId: "node-4",
+  },
+  {
+    id: "alert-6",
+    severity: "error",
+    category: "system",
+    title: "Node Offline",
+    detail: "Node 1 (Kebun Utara) - Tidak ada respons selama 5 menit",
+    time: "07:45 WIB",
+    nodeId: "node-1",
   },
 ];
 
@@ -264,6 +298,51 @@ const power: PowerData = {
   history: buildPowerHistory(),
 };
 
+/**
+ * Irrigation zone states (mock).
+ *
+ * Display-only placeholders — NOT connected to any hardware actuator.
+ * No automation, trigger rules, or control logic is implemented.
+ * Status values and zone boundaries are illustrative only.
+ *
+ * TBD(hardware): zone boundaries, valve/pump spec, and control protocol
+ * must be confirmed before any real data or automation is added.
+ */
+const irrigationZones: IrrigationZone[] = [
+  {
+    id: "zone-1",
+    name: "Zona 1",
+    location: "Kebun Utara",
+    status: "active",
+    lastActivity: "10:20 WIB",
+    nodeId: "node-1",
+  },
+  {
+    id: "zone-2",
+    name: "Zona 2",
+    location: "Kebun Tengah",
+    status: "inactive",
+    lastActivity: "08:00 WIB",
+    nodeId: "node-2",
+  },
+  {
+    id: "zone-3",
+    name: "Zona 3",
+    location: "Kebun Selatan",
+    status: "inactive",
+    lastActivity: "07:30 WIB",
+    nodeId: "node-3",
+  },
+  {
+    id: "zone-4",
+    name: "Zona 4",
+    location: "Kebun Barat",
+    status: "unknown",
+    lastActivity: "—",
+    nodeId: "node-4",
+  },
+];
+
 export const mockDashboardData: DashboardData = {
   summary,
   environmentalSeries: {
@@ -274,4 +353,5 @@ export const mockDashboardData: DashboardData = {
   alerts,
   systemInfo,
   power,
+  irrigationZones,
 };
